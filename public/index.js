@@ -4,42 +4,45 @@ const textAreaElement = document.getElementById('pollingResult');
 
 const sendNewMessage = async  () => {
     const valueToSend = messageElement.value;
+    debugger;
 
     const settings = {
         method:'POST',
-        body: JSON.stringify({valueToSend})
+        body: JSON.stringify({valueToSend}),
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+        },
     }
     const response = await fetch('http://localhost:3000/receiveMessage', settings);
-    const data = await response.json();
+    const data = await response.text();
 }
 
-const longPolling = async  () => {
-    let hasAppended = false;
+const longPolling = async (message) => {
+    
     const response = await fetch('http://localhost:3000/getMessage');
-
+    let lastMessage = '';
     if(response.status == 502) {
         await longPolling();
-    } else if( response.status !== 200) {
-        console.log('Houve algum erro nessa bosta');
+    } else if(response.status !== 200) {
         await longPolling();
     } else {
         const data = await response.text();
-        if(data) {
+        debugger;
+        const isAnyNewResponse = data != '' && message !== data;
+        if(isAnyNewResponse) {
+            lastMessage = data;
             textAreaElement.value += data;
-            hasAppended = true;
         } else {
-            hasAppended = false;
+            lastMessage = message;
         }
-        
-        await longPolling();
+        await longPolling(lastMessage);
     }
 }
 
 document.getElementById('sendMessage').addEventListener('click', sendNewMessage);
 
 window.onload = async () => {
-    console.log('eoi');
-    alert('oi');
     await longPolling();
 }
 

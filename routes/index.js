@@ -10,8 +10,11 @@ router.get('/', async (req, res) => {
 
 router.post('/receiveMessage', (req, res) => {
     const { valueToSend } = req.body;
-    console.log('recebi nova mensagem');
+    console.log(req.body);
+   
     message += valueToSend;
+    console.log(valueToSend);
+    console.log(message);
     res.send('ok');
 })
 
