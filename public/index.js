@@ -32,7 +32,7 @@ const longPolling = async (message) => {
         const isAnyNewResponse = data != '' && message !== data;
         if(isAnyNewResponse) {
             lastMessage = data;
-            textAreaElement.value += data;
+            textAreaElement.innerHTML = data;
         } else {
             lastMessage = message;
         }

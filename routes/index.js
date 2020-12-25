@@ -12,7 +12,7 @@ router.post('/receiveMessage', (req, res) => {
     const { valueToSend } = req.body;
     console.log(req.body);
    
-    message += valueToSend;
+    message += `\n ${valueToSend}`;
     console.log(valueToSend);
     console.log(message);
     res.send('ok');
